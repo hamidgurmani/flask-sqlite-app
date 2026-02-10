@@ -1,20 +1,25 @@
 version: "3.9"
 
-services: 
+services:
   web:
     build: .
-    ports: 
-      - "5000:5000"
-    environment: 
-      - ENV_FLASK=prouction
+    container_name: flask-app
+    ports:
+      - "80:5000"
     env_file:
       - .env
-    volumes:  
-      - ./instance:/app/instance
-    restart: always 
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+    depends_on:
+      - db
+    restart: always
 
+  db:
+    image: postgres:15
+    container_name: postgres-db
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+
+volumes:
+  postgres_data:

@@ -6,16 +6,13 @@ from datetime import datetime
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-key")
 
-# ---- Database config ----
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-INSTANCE_DIR = os.path.join(BASE_DIR, "instance")
-os.makedirs(INSTANCE_DIR, exist_ok=True)
-
-DB_PATH = os.path.join(INSTANCE_DIR, "app.db")
-
-app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
-    "DATABASE_URL", f"sqlite:///{DB_PATH}"
+# ----Database configuration----
+DATABASE_URL = os.environ.get(
+    "DATABASE_URL",
+    "postgresql://postgres:postgres@db:5432/flaskdb"
 )
+
+app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
@@ -54,9 +51,11 @@ def delete_user(user_id):
     return redirect(url_for("index"))
 
 # ---- App startup (IMPORTANT PART) ----
-with app.app_context():
-    db.create_all()
+#with app.app_context():
+ #   db.create_all()
 
 # ---- Local dev only ----
 if __name__ == "__main__":
-    app.run(debug=True)
+    with app.app_context():
+        db.create_all()
+    app.run(host="0.0.0.0", port=5000)
