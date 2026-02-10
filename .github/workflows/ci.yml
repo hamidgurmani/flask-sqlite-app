@@ -3,7 +3,7 @@ name: CI-CD Pipeline
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   build:
@@ -32,7 +32,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd flask-sqlite-app || exit 1
-            git pull origin master
+            git pull origin main
             docker stop flask-app || true
             docker rm flask-app || true
             docker build -t flask-sqlite-app:prod .
