@@ -16,7 +16,7 @@ jobs:
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/key.pem
+          eciho "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/key.pem
           chmod 600 ~/.ssh/key.pem
 
       - name: Deploy to EC2
@@ -32,7 +32,8 @@ jobs:
 
             echo "Rebuilding containers..."
             ENV_FILE=.env.prod docker compose down
-            ENV_FILE=.env.prod docker compose up -d --build
+            ENV_FILE=.env.prod docker compose pull
+            ENV_FILE=.env.prod docker compose up -d 
 
             echo "Deployment complete!"
           EOF
