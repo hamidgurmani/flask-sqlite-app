@@ -1,0 +1,30 @@
+name: Deploy Production
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-prod:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to EC2 (Production)
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /home/ubuntu/flask-sqlite-app || exit 1
+
+            echo "Pulling latest main branch..."
+            git pull origin main
+
+            echo "Updating PRODUCTION containers..."
+            ENV_FILE=.env.prod docker compose down
+            ENV_FILE=.env.prod docker compose \
+              -f docker-compose.yml \
+              -f docker-compose.prod.yml \
+              up -d --build
