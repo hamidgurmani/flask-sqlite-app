@@ -41,11 +41,15 @@ Gunicorn (for production use later)
 Follow these simple steps:
 
 1️⃣ Clone the Repository
+
 git clone <your-repo-url>
+
 cd flask-sqlite-app
 
 2️⃣ Create Virtual Environment
+
 python3 -m venv venv
+
 source venv/bin/activate
 
 
@@ -54,9 +58,11 @@ Windows:
 venv\Scripts\activate
 
 3️⃣ Install Dependencies
+
 pip install -r requirements.txt
 
 4️⃣ Run the Application
+
 python app.py
 
 5️⃣ Open in Browser
